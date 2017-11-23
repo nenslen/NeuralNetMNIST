@@ -1,5 +1,5 @@
 $(function() {
-	Client.test();
+	//Client.test();
 
 	var el = document.getElementById('sketchpad');
 	var pad = new Sketchpad(el);
@@ -27,7 +27,8 @@ $(function() {
 
 
     $('#submitButton').click(function() {
-
+        Client.predict();
+        /*
     	// Get the image data from the sketchpad
     	var el = $('#sketchpad > canvas');
 		var padContext = el[0].getContext('2d');
@@ -62,5 +63,6 @@ $(function() {
         resizedContext.webkitImageSmoothingEnabled = false;
 		resizedContext.mozImageSmoothingEnabled = false;
 		resizedContext.imageSmoothingEnabled = false;
+        */
     });
 });

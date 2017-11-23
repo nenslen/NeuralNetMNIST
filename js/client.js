@@ -3,93 +3,78 @@ var Client = {};
 Client.socket = io.connect();
 
 
-Client.test = function() {
-    Client.socket.emit('test');
-};
-
-
-Client.socket.on('testdata', function(data) {
-
-    var target = 0;
-    var actualValue = 0;
-    var actualDigit = 0;
-    var totalCorrect = 0;
-
-    for(var i = 0; i < data[200].results.length; i++) {
-        for(var j = 0; j < 10; j++) {
-            if(data[200].results[i].desiredOutput[j] == 1) {
-                target = j;
-            }
-
-            if(data[200].results[i].output[j] > actualValue) {
-                actualValue = data[200].results[0].output[j];
-                actualDigit = j;
-            }
-        }
-        if(target == actualDigit) {
-            totalCorrect++;
-        }
-    }
-    console.log(totalCorrect + " correct / " + data[200].results.length + " = " + (totalCorrect / data[200].results.length * 100) + "%");
-    //console.log("target=" + target + ",actual=" + actualDigit);
-    //console.log(data[200].results[0]);
-    /*
-    var target = 0;
-    var actualValue = 0;
-    var actualDigit = 0;
-
-    for(var j = 0; j < 10; j++) {
-        if(data[200].results[0].desiredOutput[j] == 1) {
-            target = j;
-        }
-        //console.log(data[200].results[0].output[j] + " > " + actual);
-        if(data[200].results[0].output[j] > actualValue) {
-            actualValue = data[200].results[0].output[j];
-            actualDigit = j;
-        }
-    }
-    console.log("target=" + target + ",actual=" + actualDigit);
-    console.log(data[200].results[0]);
-    */
 /*
-    var image = data[Object.keys(data)[0]];
+* Converts the image currently in the drawing canvas to a grayscale array of length 784
+* to represent a 28x28 image. The processed image is then sent to the network for
+* testing.
+*/
+Client.predict = function() {
+
+    // Get the image data from the sketchpad
+    var el = $('#sketchpad > canvas');
+    var padContext = el[0].getContext('2d');
+    var imageData = padContext.getImageData(0, 0, 280, 280);
+
+    // Put the image data from the sketchpad into the hidden canvas
+    var hiddenCanvas = document.getElementById("hiddenCanvas");
+    var hiddenContext = hiddenCanvas.getContext("2d");
+    hiddenContext.putImageData(imageData, 0, 0);
+
+    // Resize the hidden canvas image to 28x28
+    var HERMITE = new Hermite_class();
+    HERMITE.resample_single(hiddenCanvas, 28, 28);
+    imageData = hiddenContext.getImageData(0, 0, 28, 28);
+    console.log(imageData);
+
+    // Put resized image onto resized canvas
+    var resizedCanvas = document.getElementById('resizedCanvas');
+    var resizedContext = resizedCanvas.getContext('2d');
+    var image = new Image();
+    var dataURL = hiddenCanvas.toDataURL();
+    image.onload = function() {
+        // Fit resized 28x28 image to fill 280x280 canvas
+        resizedContext.clearRect(0, 0, 280, 280);
+        resizedContext.drawImage(image,0,0,28,28,0,0,280,280);
+    }
+    image.src = dataURL;
+
+    // Disable smoothing so pixels are clear
+    resizedContext.webkitImageSmoothingEnabled = false;
+    resizedContext.mozImageSmoothingEnabled = false;
+    resizedContext.imageSmoothingEnabled = false;
+
+/*
+    // Get the 28x28 image data from the hidden canvas
     var canvas = document.getElementById("imageCanvas"); 
     var context = canvas.getContext("2d");
     var width = canvas.width;
     var height = canvas.height;
     var imageData = context.createImageData(width, height);
+*/  
 
-    // Loop over all of the pixels
-    for (var x = 0; x < width; x++) {
-        for (var y = 0; y < height; y++) {
-        	// Get pixel color
-        	var pixelColor = 255 - image[(y * width + x)];
 
-            // Set the pixel data
-            var pixelIndex = (y * width + x) * 4;
-            imageData.data[pixelIndex]     = pixelColor; // Red
-            imageData.data[pixelIndex + 1] = pixelColor; // Green
-            imageData.data[pixelIndex + 2] = pixelColor; // Blue
-            imageData.data[pixelIndex + 3] = 255;        // Alpha
+    // Process each pixel
+    var grayscale = [];
+    for (var x = 0; x < 28; x++) {
+        for (var y = 0; y < 28; y++) {
+            var pixels = [];
+
+            /**
+            * Convert each RGBA pixel from the canvas to a grayscale
+            * equivalent value between [0 - 255], and add all pixels
+            * to an array to be used as input for the network.
+            */
+            var pixelColor = 0;
+            var pixelIndex = (x * 28 + y) * 4;
+            pixelColor += imageData.data[pixelIndex + 3]; // Alpha
+            grayscale.push(pixelColor);
         }
+
     }
-
-    context.putImageData(imageData, 0, 0);
-
-    var HERMITE = new Hermite_class();
-    HERMITE.resample_single(canvas, 10, 10);
+    Client.socket.emit('getPrediction', grayscale);
+};
 
 
-
-
-
-
-	// Resize image TEST
-	var canvas2 = document.getElementById("imageCanvas2"); 
-    var context2 = canvas2.getContext("2d");
-	
-	var imgData = context.getImageData(0, 0, 10, 10);
-	context2.putImageData(imgData, 0, 0);
-	console.log(imgData);
-	*/
+Client.socket.on('prediction', function(result) {
+    console.log(result);
 });

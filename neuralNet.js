@@ -1,18 +1,43 @@
+/**
+* Nic Enslen
+* https://github.com/nenslen
+*
+* Parts of the code are heavily commented because this is a university
+* project and I wanted this to file to be a resource that I'm able to come
+* back to if I forget exactly how something works with neural nets.
+*/
+
 
 
 /**
 * Represents a layer in the network
 */
 function Layer() {
+	
+	/**
+	* An array of Neuron objects that represent the neurons in this layer.
+	*/
 	this.neurons = [];
+
+	/**
+	* A 2D matrix that represents the weights between the neurons in this layer
+	* and the next. It has the form weights[j][k], where j is a neuron
+	* in the next layer, and k is a neuron in this layer, meaning that weights[j][k].value
+	* is the value of the weight between the two nodes.
+	*/
 	this.weights = [];
+
+	/**
+	* The type of layer this is. Possible values are input, hidden, and output.
+	*/
 	this.layerType;
 
 
 	/**
-	* Initializes this layer with neurons and weights
+	* Initializes the layer by creating neurons and weights for it.
 	* @param size: The number of neurons in this layer
 	* @param sizeNext: The number of neurons in the next layer
+	* @param layerType: The LayerType enum specifying the type of layer (input, hidden, output)
 	*/
 	this.initialize = function(size, sizeNext, layerType) {
 		
@@ -65,7 +90,8 @@ function Layer() {
 
 
 	/**
-	* Performs the back propagation to calculate errors for each neuron
+	* Performs back propagation from output layer to input layer. Errors are calculated and
+	* set for each neuron.
 	* @param targets: The target output values (only used for output layer)
 	* @param nextLayer: The next layer (used for all other layers)
 	*/

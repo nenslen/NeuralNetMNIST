@@ -22,9 +22,43 @@ server.listen(8081, function() {
 
 // Socket.io connections
 io.on('connection', function(socket) {
-	// Test
-    socket.on('test', function() {
-    	socket.emit('testdata', testResults);
+	
+
+	/**
+	* Takes a user-drawn image from client side and returns a
+	* prediction.
+	* @param imageData: An array representing the 784 input pixels
+	* @return: A result object
+	*/  
+    socket.on('getPrediction', function(imageData) {
+    	
+    	/**
+    	* Digit represents what digit [0 - 9] the network thinks the
+    	* given image is. Confidence is how sure the network is that it
+    	* guessed correctly.
+    	*/
+		var result = {
+			digit: 0,
+			confidence: 0,
+		};
+
+		// Get the output from the given image
+		var out = network.input(imageData);
+
+		// Get the network's prediction
+		var digit = 0;
+		var maxActivation = 0;
+	    for(var j = 0; j < 10; j++) {
+	        if(out[j] > maxActivation) {
+	            digit = j;
+	            maxActivation = out[j];
+	        }
+	    }
+	    result.digit = digit;
+	    result.confidence = maxActivation;
+
+	    // Send client the prediction
+    	socket.emit('prediction', result);
     });
 });
 
