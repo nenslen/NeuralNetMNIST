@@ -15,12 +15,29 @@
     <script src="js/responsiveSketchpad.js"></script>
 </head>
 <body>
-    <canvas id='resizedCanvas' width="280" height="280"></canvas>
-    <canvas id="hiddenCanvas" width="280" height="280" style="display: none"></canvas>
+    <h1 id="header">Neural Network for Handwritten Digits</h1>
     <div id="sketchpad"></div>
-    <button id="undoButton">Undo</button>
-    <button id="redoButton">Redo</button>
-    <button id="clearButton">Clear</button>
-    <button id="submitButton">Submit</button>
+    <button id="undoButton" class="button">Undo</button>
+    <button id="redoButton" class="button">Redo</button>
+    <button id="clearButton" class="button">Clear</button>
+    <button id="submitButton" class="button">Submit</button>
+    <div id="result" class="card center"><h1>&nbsp</h1></div>
+    <div id="more">
+        <h2>About</h2>
+        <p id="description">This is a university project that uses a neural network to recognize handwritten digits.
+        Try it out by drawing a digit (0 to 9) in the box above and see if the network can guess which one you drew!
+         
+        <h2>Details</h2>
+        <p>I built the network using javascript, and it's hosted on a NodeJS server. It was trained using the MNIST
+        data set, which is a collection of 70,000 images. When you draw an image above and click submit, the image is converted
+        into a format that the neural network can understand. First, it is downscaled to 28x28 pixels, and is then converted to
+        black and white (grayscale). The image below shows what the network is seeing when you submit a drawing. The
+        converted image is then sent through the network and a 'guess' is returned. This guess is contains which digit
+        the network thinks the image is, and how confident it is with its guess.</p>
+        
+        <p>To see the source code, visit the <a href="https://github.com/nenslen/NeuralNetMNIST">github page for this project</a>.</p>
+        <canvas id='resizedCanvas' width="280" height="280"></canvas>
+        <canvas id="hiddenCanvas" width="280" height="280" style="display: none"></canvas>
+    </div>
 </body>
 </html>

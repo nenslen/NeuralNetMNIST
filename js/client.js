@@ -76,5 +76,8 @@ Client.predict = function() {
 
 
 Client.socket.on('prediction', function(result) {
+    var confidence = parseFloat(result.confidence * 100).toFixed(2);
+    var output = $('<h1></h1>').text('I\'m ' + confidence + '% sure you drew a ' + result.digit + '!');
+    $('#result').html(output);
     console.log(result);
 });

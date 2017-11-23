@@ -67,7 +67,7 @@ io.on('connection', function(socket) {
 
 // Network variables
 var sw = stopwatch.create();
-var totalTrainingExamples = 5000;
+var totalTrainingExamples = 10000;
 var batchSize = 100;
 var options = {
 	iterations: 50,

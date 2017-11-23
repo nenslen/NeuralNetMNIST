@@ -3,8 +3,8 @@
 * https://github.com/nenslen
 *
 * Parts of the code are heavily commented because this is a university
-* project and I wanted this to file to be a resource that I'm able to come
-* back to if I forget exactly how something works with neural nets.
+* project. Also, I wanted this to be a resource for future neural net
+* projects that I'm able to come back to and reference.
 */
 
 
@@ -23,7 +23,7 @@ function Layer() {
 	* A 2D matrix that represents the weights between the neurons in this layer
 	* and the next. It has the form weights[j][k], where j is a neuron
 	* in the next layer, and k is a neuron in this layer, meaning that weights[j][k].value
-	* is the value of the weight between the two nodes.
+	* is the value of the weight between the two neurons.
 	*/
 	this.weights = [];
 
@@ -62,7 +62,8 @@ function Layer() {
 
 
 	/**
-	* Activates the neurons in this layer
+	* Activates the neurons in this layer. This is done by computing both the
+	* weighted sum and activation of each neuron.
 	* @param input: An array representing the inputs (only used for input layer)
 	* @param prevLayer: The previous layer (used for all other layers)
 	*/
@@ -118,8 +119,9 @@ function Layer() {
 
 
 	/**
-	* Calculates the gradients of each weight/bias, then applies them
+	* Calculates the gradient of each weight/bias and applies the changes
 	* @param nextLayer: The next layer
+	* @param learningRate: The rate at which the network learns
 	*/
 	this.calculateGradients = function(nextLayer, learningRate) {
 
@@ -149,7 +151,7 @@ function Layer() {
 	* Applies the gradients of each weight/bias, then clears them
 	* @param nextLayer: The next layer
 	*/
-	this.applyGradients = function(nextLayer, batchSize) {
+	this.applyGradients = function(nextLayer, batchSize, learningRate) {
 
 		// Output layer
 		if(this.layerType == LayerType.OUTPUT) {
@@ -159,14 +161,14 @@ function Layer() {
 
 		// Apply bias gradient
 		for(var i = 0; i < this.neurons.length; i++) {
-			this.neurons[i].bias -= this.neurons[i].biasGradient / batchSize;
+			this.neurons[i].bias -= (this.neurons[i].biasGradient / batchSize) * learningRate;
 			this.neurons[i].biasGradient = 0;
 		}
 
 		// Calculate weight gradients
 		for(var i = 0; i < this.neurons.length; i++) {
 			for(var j = 0; j < nextLayer.neurons.length; j++) {
-				this.weights[j][i].value -= this.weights[j][i].gradient / batchSize;
+				this.weights[j][i].value -= (this.weights[j][i].gradient / batchSize) * learningRate;
 				this.weights[j][i].gradient = 0;
 			}
 		}
@@ -178,6 +180,7 @@ function Layer() {
 	*/
 	this.clearGradients = function(nextLayer) {
 		for(var i = 0; i < this.neurons.length; i++) {
+			this.neurons[i].biasGradient = 0;
 			for(var j = 0; j < nextLayer.neurons.length; j++) {
 				this.weights[j][i].gradient = 0;
 			}
@@ -258,7 +261,7 @@ function Network(options) {
 
 
 	/**
-	* Trains the network
+	* Trains the network on a given set of training examples
 	* @param inputs: An array representing the inputs to train on
 	* @param targets: An array representing the target output values
 	*/
@@ -267,10 +270,11 @@ function Network(options) {
 		var count = 0;
 
 		// Clear previous gradients
+		/*
 		this.inputLayer.clearGradients(this.hiddenLayer1);
 		this.hiddenLayer1.clearGradients(this.hiddenLayer2);
 		this.hiddenLayer2.clearGradients(this.outputLayer);
-
+		*/
 
 		// Iterate over batch
 		for(var n = 0; n < this.options.iterations; n++) {
@@ -304,10 +308,12 @@ function Network(options) {
 			}
 
 			// Apply gradients
-			this.inputLayer.applyGradients(this.hiddenLayer1, inputs.length);
-			this.hiddenLayer1.applyGradients(this.hiddenLayer2, inputs.length);
-			this.hiddenLayer2.applyGradients(this.outputLayer, inputs.length);
+			/*
+			this.inputLayer.applyGradients(this.hiddenLayer1, inputs.length, this.options.learningRate);
+			this.hiddenLayer1.applyGradients(this.hiddenLayer2, inputs.length, this.options.learningRate);
+			this.hiddenLayer2.applyGradients(this.outputLayer, inputs.length, this.options.learningRate);
 			this.outputLayer.applyGradients(0);
+			*/
 		}
 	}
 };
@@ -324,7 +330,4 @@ function sigmoidPrime(value) {
 
 var LayerType = Object.freeze({INPUT: 0, HIDDEN: 1, OUTPUT: 2});
 
-
-//exports.neuron = Neuron;
-//exports.layer = Layer;
 exports.network = Network;
