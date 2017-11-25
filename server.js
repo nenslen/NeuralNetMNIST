@@ -56,7 +56,8 @@ io.on('connection', function(socket) {
 	    }
 	    result.digit = digit;
 	    result.confidence = maxActivation;
-
+	    result.outputs = out;
+	    
 	    // Send client the prediction
     	socket.emit('prediction', result);
     });
@@ -219,7 +220,7 @@ console.log("--OPTIONS--");
 console.log("Images:        " + totalTrainingExamples);
 console.log("Batch Size:    " + batchSize);
 console.log("Learning Rate: " + options.learningRate);
-console.log("Iterations:    " + options.maxIterations);
+console.log("Iterations:    " + options.iterations);
 console.log("--RESULTS--");
 console.log("Success Rate:        " + totalCorrect + " / " + totalTrainingExamples + " = " + Math.round((totalCorrect / totalTrainingExamples * 100) * 100) / 100 + "%");
 console.log("Total Time Elapsed = " + Math.round(sw.elapsed.minutes * 100) / 100 + " minutes");

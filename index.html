@@ -12,7 +12,7 @@
     <script src="js/controller.js"></script>
     <script src="js/imageResize.js"></script>
     <script src="js/responsiveSketchpad.js"></script>
-    <script src="js/responsiveSketchpad.js"></script>
+
 </head>
 <body>
     <h1 id="header">Neural Network for Handwritten Digits</h1>
@@ -22,6 +22,22 @@
     <button id="clearButton" class="button">Clear</button>
     <button id="submitButton" class="button">Submit</button>
     <div id="result" class="card center"><h1>&nbsp</h1></div>
+    
+    <div id="chart">
+        <ul id="bars">
+            <div class="bar"><div class="barLabel">0</div><div class="barValue" id="bar0">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">1</div><div class="barValue" id="bar1">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">2</div><div class="barValue" id="bar2">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">3</div><div class="barValue" id="bar3">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">4</div><div class="barValue" id="bar4">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">5</div><div class="barValue" id="bar5">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">6</div><div class="barValue" id="bar6">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">7</div><div class="barValue" id="bar7">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">8</div><div class="barValue" id="bar8">&nbsp</div></div>
+            <div class="bar"><div class="barLabel">9</div><div class="barValue" id="bar9">&nbsp</div></div>
+        </ul>
+    </div>
+
     <div id="more">
         <h2>About</h2>
         <p id="description">This is a university project that uses a neural network to recognize handwritten digits.

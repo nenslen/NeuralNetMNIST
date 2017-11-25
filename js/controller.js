@@ -65,4 +65,10 @@ $(function() {
 		resizedContext.imageSmoothingEnabled = false;
         */
     });
+
+    // Get network's prediction 10 times per second
+    setInterval(Client.predict, 17);
+
+
+    //$('.barChart').barChart();
 });

@@ -80,4 +80,8 @@ Client.socket.on('prediction', function(result) {
     var output = $('<h1></h1>').text('I\'m ' + confidence + '% sure you drew a ' + result.digit + '!');
     $('#result').html(output);
     console.log(result);
+
+    for(var i = 0; i < 10; i++) {
+        $('#bar' + i).width((result.outputs[i] * 100) - 5 + '%');
+    }
 });

@@ -139,3 +139,27 @@ $cardTextColor: #123;
     //outline-offset: -4px;
   }
 }
+
+
+.bar {
+	max-width: 800px;
+	width: 100%;
+	height: 30px;
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+
+	.barValue {
+		background-color: lighten(#456, 40%);
+		width: 50%;
+		height: 25px;
+		//margin: 5px;
+		display: inline-block;
+	}
+
+	.barLabel {
+		height: 30px;
+		font-size: 1.2em;
+		display: inline-block;
+	}
+}
