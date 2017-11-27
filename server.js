@@ -4,7 +4,6 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 var fs = require('fs');
-var _ = require('lodash');
 var stopwatch = require('node-stopwatch').Stopwatch
 var nn = require('./neuralNet.js');
 
@@ -40,6 +39,7 @@ io.on('connection', function(socket) {
 		var result = {
 			digit: 0,
 			confidence: 0,
+			outputs: 0
 		};
 
 		// Get the output from the given image
@@ -68,10 +68,10 @@ io.on('connection', function(socket) {
 
 // Network variables
 var sw = stopwatch.create();
-var totalTrainingExamples = 10000;
+var totalTrainingExamples = 60000;
 var batchSize = 100;
 var options = {
-	iterations: 50,
+	iterations: 10,
 	learningRate: 0.05,
     log: false
 };
